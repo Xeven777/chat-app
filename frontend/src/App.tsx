@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import io from "socket.io-client";
 
 import { Button } from "./components/ui/button";
@@ -9,9 +9,10 @@ import { Separator } from "./components/ui/separator";
 import { toast } from "sonner";
 import { Dices, UserRoundSearch } from "lucide-react";
 import {
-  uniqueNamesGenerator, adjectives,
+  uniqueNamesGenerator,
+  adjectives,
   animals,
-  names
+  names,
 } from "unique-names-generator";
 
 const socket = io("http://localhost:4000");
@@ -24,6 +25,7 @@ function App() {
   const [messageList, setMessageList] = useState<
     { username: string; text: string; room: string }[]
   >([]);
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     socket.on("connect", () => {
@@ -44,6 +46,18 @@ function App() {
       socket.off("message");
     };
   }, []);
+
+  // Auto-scroll to the bottom when new messages arrive
+  useEffect(() => {
+    if (scrollAreaRef.current) {
+      const scrollContainer = scrollAreaRef.current.querySelector(
+        "[data-radix-scroll-area-viewport]"
+      );
+      if (scrollContainer) {
+        scrollContainer.scrollTop = scrollContainer.scrollHeight;
+      }
+    }
+  }, [messageList]);
 
   const joinRoom = () => {
     if (username !== "" && room !== "") {
@@ -154,8 +168,14 @@ function App() {
           </Card>
         </div>
       ) : (
-        <div>
-          <Card className="w-full z-20 max-w-4xl h-[82vh] shadow-lg flex flex-col border-border">
+        <div className="flex items-center justify-center min-h-screen bg-background p-4">
+          <img
+            src="/bg.webp"
+            alt=""
+            className="absolute inset-0 object-center size-full"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-transparent via-background/60 to-background" />
+          <Card className="w-full backdrop-blur-2xl z-20 max-w-4xl h-[82vh] shadow-2xl flex flex-col border-border">
             <CardHeader className="py-3 px-4 border-b border-border">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-xl">
@@ -170,8 +190,20 @@ function App() {
               </div>
             </CardHeader>
 
-            <ScrollArea className="flex-grow p-4">
-              <div className="space-y-4">
+            <ScrollArea
+              ref={scrollAreaRef}
+              className="flex-grow p-4 pb-2 overflow-hidden"
+              type="always"
+            >
+              <div className="space-y-5 pb-1">
+                {messageList.length === 0 && (
+                  <div className="flex items-center justify-center h-40">
+                    <p className="text-muted-foreground text-sm">
+                      No messages yet. Start the conversation!
+                    </p>
+                  </div>
+                )}
+
                 {messageList.map((messageContent, index) => {
                   const isCurrentUser = username === messageContent.username;
                   return (
@@ -182,15 +214,17 @@ function App() {
                       }`}
                     >
                       <div
-                        className={`max-w-[80%] rounded-lg px-4 py-2 ${
+                        className={`max-w-[80%] rounded-2xl px-4 py-2.5 ${
                           isCurrentUser
-                            ? "bg-primary text-primary-foreground"
-                            : "bg-muted text-muted-foreground"
+                            ? "bg-primary text-primary-foreground rounded-tr-none shadow-sm"
+                            : "bg-muted text-muted-foreground rounded-tl-none shadow-sm"
                         }`}
                       >
-                        <p className="break-words">{messageContent.text}</p>
+                        <p className="break-words text-sm md:text-base">
+                          {messageContent.text}
+                        </p>
                         <p
-                          className={`text-xs mt-1 ${
+                          className={`text-[10px] md:text-xs opacity-80 mt-1 ${
                             isCurrentUser
                               ? "text-primary-foreground/80"
                               : "text-muted-foreground/80"
