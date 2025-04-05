@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import io from "socket.io-client";
 
-// Import Shadcn components
 import { Button } from "./components/ui/button";
 import { Input } from "./components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "./components/ui/card";
@@ -68,7 +67,7 @@ function App() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-background p-4">
+    <div className="flex z-10 items-center justify-center min-h-screen bg-background p-4">
       {!showChat ? (
         <Card className="w-full max-w-md shadow-xl border-border">
           <CardHeader className="space-y-1">
