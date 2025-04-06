@@ -6,6 +6,7 @@ import cors from "cors";
 interface Message {
   username: string;
   text: string;
+  room: string;
 }
 
 interface ChatRoom {
@@ -17,11 +18,25 @@ const chatRooms: Record<string, ChatRoom> = {};
 const app = express();
 
 const server = http.createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+  cors: {
+    origin: "*", // In production, specify your frontend URL
+    methods: ["GET", "POST"],
+  },
+});
 
-const PORT = 4000;
+const PORT = process.env.PORT || 4000;
 
 app.use(cors());
+
+// Add a simple health check endpoint for AWS
+app.get("/", (req, res) => {
+  res.send("Chat server is running");
+});
+
+app.get("/health", (req, res) => {
+  res.status(200).send("OK");
+});
 
 io.on("connection", (socket) => {
   console.log("A user connected");
@@ -41,11 +56,13 @@ io.on("connection", (socket) => {
     socket.emit("message", {
       username: "System",
       text: `Welcome, ${username}! You joined room: ${room}`,
+      room,
     });
 
     socket.to(room).emit("message", {
       username: "System",
       text: `${username} has joined the room.`,
+      room,
     });
   });
 
@@ -53,10 +70,10 @@ io.on("connection", (socket) => {
     const { username, room, text } = data;
 
     if (chatRooms[room]) {
-      chatRooms[room].messages.push({ username, text });
+      chatRooms[room].messages.push({ username, text, room });
     }
 
-    io.to(room).emit("message", { username, text });
+    io.to(room).emit("message", { username, text, room });
   });
 });
 
