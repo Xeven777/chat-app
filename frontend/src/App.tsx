@@ -15,7 +15,7 @@ import {
   names,
 } from "unique-names-generator";
 
-const dev = true;
+const dev = !true; // i change it according to my mood btw
 
 const socket = io(
   dev
