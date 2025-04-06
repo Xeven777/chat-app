@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "./components/ui/card";
 import { ScrollArea } from "./components/ui/scroll-area";
 import { Separator } from "./components/ui/separator";
 import { toast } from "sonner";
-import { Dices, UserRoundSearch } from "lucide-react";
+import { Copy, Dices, UserRoundSearch } from "lucide-react";
 import {
   uniqueNamesGenerator,
   adjectives,
@@ -15,8 +15,12 @@ import {
   names,
 } from "unique-names-generator";
 
+const dev = true;
+
 const socket = io(
-  "http://chat-app-backend-env.eba-cmgmgdew.ap-south-1.elasticbeanstalk.com/"
+  dev
+    ? "http://localhost:4000"
+    : "http://chat-app-backend-env.eba-cmgmgdew.ap-south-1.elasticbeanstalk.com"
 );
 
 function App() {
@@ -49,7 +53,6 @@ function App() {
     };
   }, []);
 
-  // Auto-scroll to the bottom when new messages arrive
   useEffect(() => {
     if (scrollAreaRef.current) {
       const scrollContainer = scrollAreaRef.current.querySelector(
@@ -101,14 +104,14 @@ function App() {
   return (
     <div>
       {!showChat ? (
-        <div className="flex z-10 items-center justify-center md:justify-start ml-28 min-h-screen bg-background p-4">
+        <div className="flex z-10 items-center justify-center md:justify-start md:ml-28 min-h-screen bg-background p-4">
           <img
             src="/bg.webp"
             alt=""
-            className="absolute inset-0 object-center size-full"
+            className="absolute inset-0 object-center object-cover size-full"
           />
-          <div className="absolute inset-0 bg-gradient-to-l from-transparent via-background/60 to-background" />
-          <Card className="w-full scale-105 max-w-md shadow-xl border-border">
+          <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-l from-transparent via-background/60 to-background" />
+          <Card className="w-full md:scale-105 max-w-md shadow-xl border-border">
             <CardHeader className="space-y-1">
               <CardTitle className="text-center text-2xl font-bold">
                 Join a Chat Room
@@ -145,6 +148,13 @@ function App() {
                   value={room}
                   onChange={(event) => setRoom(event.target.value)}
                 />
+                <Copy
+                  className="absolute right-9 top-1 cursor-pointer hover:bg-muted rounded-full px-2 py-1 size-8 active:scale-105 transition-all duration-200"
+                  onClick={() => {
+                    navigator.clipboard.writeText(room);
+                    toast.info("Copied");
+                  }}
+                />
                 <Dices
                   className="absolute right-2 top-1 cursor-pointer hover:bg-muted rounded-full px-2 py-1 size-8 active:rotate-12 active:scale-105 transition-all duration-200"
                   onClick={() => {
@@ -176,12 +186,19 @@ function App() {
             alt=""
             className="absolute inset-0 object-center size-full"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-transparent via-background/60 to-background" />
-          <Card className="w-full backdrop-blur-2xl z-20 max-w-4xl h-[82vh] shadow-2xl flex flex-col border-border">
+          <div className="absolute inset-0 bg-gradient-to-t from-transparent via-background/25 to-background" />
+          <Card className="w-full backdrop-blur-2xl z-20 max-w-4xl h-[92vh] lg:h-[82vh] shadow-2xl flex flex-col border-border">
             <CardHeader className="py-3 px-4 border-b border-border">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-xl">
+                <CardTitle className="text-xl flex gap-2">
                   Room: <span className="font-bold text-primary">{room}</span>
+                  <Copy
+                    className="size-5 mt-1 hover:opacity-90 cursor-pointer"
+                    onClick={() => {
+                      navigator.clipboard.writeText(room);
+                      toast.info("Copied");
+                    }}
+                  />
                 </CardTitle>
                 <span className="text-sm text-muted-foreground">
                   Joined as{" "}
@@ -216,7 +233,7 @@ function App() {
                       }`}
                     >
                       <div
-                        className={`max-w-[80%] rounded-2xl px-4 py-2.5 ${
+                        className={`max-w-4/5 rounded-2xl px-4 py-2.5 ${
                           isCurrentUser
                             ? "bg-primary text-primary-foreground rounded-tr-none shadow-sm"
                             : "bg-muted text-muted-foreground rounded-tl-none shadow-sm"
@@ -228,8 +245,8 @@ function App() {
                         <p
                           className={`text-[10px] md:text-xs opacity-80 mt-1 ${
                             isCurrentUser
-                              ? "text-primary-foreground/80"
-                              : "text-muted-foreground/80"
+                              ? "text-primary-foreground/80 text-end"
+                              : "text-muted-foreground/80 text-start"
                           }`}
                         >
                           {messageContent.username}
