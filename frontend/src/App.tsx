@@ -15,7 +15,9 @@ import {
   names,
 } from "unique-names-generator";
 
-const socket = io(import.meta.env.VITE_API_URL || "http://localhost:4000");
+const socket = io(
+  "http://chat-app-backend-env.eba-cmgmgdew.ap-south-1.elasticbeanstalk.com/"
+);
 
 function App() {
   const [username, setUsername] = useState("");
