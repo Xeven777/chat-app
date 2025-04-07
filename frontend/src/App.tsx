@@ -16,12 +16,9 @@ import {
 } from "unique-names-generator";
 
 const dev = !true; // i change it according to my mood btw
-const prodUrl = "https://chat-app-w6y9.onrender.com";
+const prodUrl = "https://chatapi.anish7.me";
 
-// const prodUrl2 =
-//   "https://chat-app-backend-env.eba-cmgmgdew.ap-south-1.elasticbeanstalk.com";
-
-const socket = io(dev ? "http://localhost:4000" : prodUrl);
+const socket = io(dev ? "ws://localhost:4000" : prodUrl);
 
 function App() {
   const [username, setUsername] = useState("");
