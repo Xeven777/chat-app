@@ -1,6 +1,8 @@
-# Chat Application
+# Ghibli Styled Chat Application
 
 A real-time chat application built with Node.js, Express, Socket.IO, React, and TypeScript.
+
+![ss](frontend/public/og-img.jpg)
 
 ## Project Structure
 
