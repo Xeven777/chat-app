@@ -36,6 +36,7 @@ function App() {
   useEffect(() => {
     socket.on("connect", () => {
       console.log("Connected to server");
+      toast.success("Connected to server");
     });
 
     socket.on("disconnect", () => {
@@ -102,9 +103,9 @@ function App() {
   };
 
   return (
-    <div>
+    <>
       {!showChat ? (
-        <div className="flex z-10 items-center justify-center md:justify-start md:ml-28 min-h-screen bg-background p-4">
+        <div className="flex z-10 items-center justify-center md:justify-start md:ml-28 h-dvh overflow-hidden bg-background p-4">
           <img
             src="/bg.webp"
             alt=""
@@ -180,7 +181,7 @@ function App() {
           </Card>
         </div>
       ) : (
-        <div className="flex items-center justify-center min-h-screen bg-background p-4">
+        <div className="flex items-center justify-center h-dvh overflow-hidden bg-background p-4">
           <img
             src="/bg.webp"
             alt=""
@@ -188,25 +189,23 @@ function App() {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-transparent via-background/25 to-background" />
           <Card className="w-full backdrop-blur-2xl z-20 max-w-4xl h-[92vh] lg:h-[82vh] shadow-2xl flex flex-col border-border">
-            <CardHeader className="py-3 px-4 border-b border-border">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-xl flex gap-2">
-                  Room: <span className="font-bold text-primary">{room}</span>
-                  <Copy
-                    className="size-5 mt-1 hover:opacity-90 cursor-pointer"
-                    onClick={() => {
-                      navigator.clipboard.writeText(room);
-                      toast.info("Copied");
-                    }}
-                  />
-                </CardTitle>
-                <span className="text-sm text-muted-foreground">
-                  Joined as{" "}
-                  <span className="font-medium text-foreground underline">
-                    {username}
-                  </span>
+            <CardHeader className="py-3 px-4 border-b border-border flex flex-wrap gap-4 items-center justify-between">
+              <CardTitle className="text-xl flex gap-2">
+                Room: <span className="font-bold text-primary">{room}</span>
+                <Copy
+                  className="size-5 mt-1 hover:opacity-90 cursor-pointer"
+                  onClick={() => {
+                    navigator.clipboard.writeText(room);
+                    toast.info("Copied");
+                  }}
+                />
+              </CardTitle>
+              <span className="text-sm text-muted-foreground">
+                Joined as{" "}
+                <span className="font-medium text-foreground underline">
+                  {username}
                 </span>
-              </div>
+              </span>
             </CardHeader>
 
             <ScrollArea
@@ -278,7 +277,20 @@ function App() {
           </Card>
         </div>
       )}
-    </div>
+      {!showChat && (
+        <footer className="fixed bottom-2 right-2 rounded-lg bg-background border-b py-2 px-4 text-center text-sm text-muted-foreground">
+          Made By
+          <a
+            href="http://bento.anish7.me"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline text-foreground hover:opacity-90 ml-1"
+          >
+            Anish
+          </a>
+        </footer>
+      )}
+    </>
   );
 }
 
