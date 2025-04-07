@@ -4,6 +4,30 @@ A real-time chat application built with Node.js, Express, Socket.IO, React, and 
 
 ![ss](frontend/public/og-img.jpg)
 
+## Technology Stack 🛠️
+
+### Frontend 🖥️
+
+- ⚛️ React 19 - UI library
+- ⚡ Vite - Build tool and dev server
+- 🧩 TypeScript - Type safety
+- 🧵 Tailwind CSS - Styling
+- 🔌 Socket.io Client - Real-time communication
+- 🎭 Shadcn UI - Component library
+
+### Backend 🔧
+
+- 🏃‍♂️ Bun - JavaScript runtime
+- 🛣️ Express - Web framework
+- 🔄 Socket.IO - Real-time bidirectional event-based communication
+- 🧩 TypeScript - Type safety
+
+### Infrastructure ☁️
+
+- 🌱 AWS Elastic Beanstalk - PaaS solution for deployment
+- 🔒 AWS Certificate Manager (ACM) - SSL certificate management
+- 🌐 Custom Domain - User-friendly access point
+
 ## Project Structure
 
 - `frontend/`: React frontend built with Vite
